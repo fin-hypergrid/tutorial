@@ -1,2 +1,3 @@
 # tutorial
-Hypergrid Tutorial
+[Hypergrid Tutorial](https://fin-hypergrid.github.io/tutorial)
+

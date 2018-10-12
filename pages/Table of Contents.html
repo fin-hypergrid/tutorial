@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="index.css">
+  <script src="https://unpkg.com/get-smart@1.0/umd/get-smart.js"></script>
+  <style>
+    ul {
+      list-style: none;
+      margin: .25em 1.5em;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    body > ul {
+      overflow-x: hidden;
+    }
+    body > ul > li {
+      margin-top: .5em;
+      font: bold 11pt sans-serif;
+    }
+    li {
+      margin: .15em 0;
+      cursor: pointer;
+    }
+    li > span {
+      background-color: ivory;
+    }
+    li > span:first-child {
+      padding-right: .5em;
+    }
+    li > span:last-child {
+      float: right;
+      padding-left: .5em;
+    }
+    li:before {
+      float: left;
+      width: 0;
+      white-space: nowrap;
+      content: ' . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
+    }
+  </style>
+  <script>
+window.addEventListener('load', function() {
+    var n = 1;
+
+    getSmart('../data/table-of-contents.js', function(toc) {
+        walk(document.body, [toc]);
+    });
+
+    document.body.addEventListener('click', function(e) {
+        for (var el = e.target; el !== document.body; el = el.parentElement) {
+            if (el.tagName === 'LI') {
+                var pageNumber = el.lastElementChild.innerText, path = '';
+                window.top.tutorial.page(pageNumber, path);
+            }
+        }
+    });
+
+    function walk(parentEl, list) {
+        list.forEach(function(filename) {
+            if (Array.isArray(filename)) {
+                var ul = document.createElement('ul');
+                parentEl.appendChild(ul);
+                walk(ul, filename);
+            } else {
+                filename = filename.substr(0, filename.length - 5);
+                var li = document.createElement('li');
+                if (window.top.tutorial && window.top.tutorial.num === n) {
+                    li.classList.add('current-page');
+                }
+                li.innerHTML = '<span>' +
+                    filename.replace(/\.html$/, '') +
+                    '</span><span class="p">' + n + '</span>';
+                parentEl.appendChild(li);
+                n += 1;
+            }
+        });
+    }
+});
+  </script>
+</head>
+<body>
+
+<h2>Table of Contents</h2>
+
+<div style="font-style:italic; text-align:center">Click below to go directly to any page in the <span class="tab" style="background-color:#f4f4f4; font-style:normal" onclick="window.top.tutorial.tabBar.select('Tutorial')">Tutorial</span> tab.</div>
+
+<ul></ul>
+
+</body>
+</html>

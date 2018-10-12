@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="index.css">
+  <script src="polyfills.js"></script>
+  <script src="index.js"></script>
+
+  <style>
+    ul:not(:first-of-type) {
+      font-size: smaller;
+    }
+    ul:first-of-type > li {
+      border: 1px solid transparent;
+      border-radius: 5px;
+      padding: 3px 6px;
+      user-select: none;
+      cursor: pointer;
+    }
+    ul:first-of-type > li.hover {
+      border-color: red;
+      background-color: #f4f4f4;
+    }
+  </style>
+
+  <script>
+    window.onload = function() {
+        var liEls = document.querySelectorAll('ul:first-of-type > li');
+        var refEl = {
+            tutorial: window.top.tutorial.tabBar.selected,
+            pager: window.top.document.getElementById('page-panel'),
+            grid: window.top.document.getElementById('hypergrid'),
+            workbench: window.top.tabBar.selected,
+            divider: window.top.document.getElementsByClassName('divider')[0],
+
+        };
+
+        var on = highlight.bind(null, true),
+            off = highlight.bind(null, null);
+
+        Array.prototype.forEach.call(liEls, function(li) {
+            li.onmouseenter = li.onmousedown = on;
+            li.onmouseleave = off;
+        });
+        window.onmouseup = function(e) {
+            Array.prototype.forEach.call(liEls, function(el) {
+                el.dispatchEvent(new CustomEvent('mouseleave'))
+            });
+        };
+
+        function highlight(reveal, e) {
+            console.log(e.type);
+            var key = e.target.getAttribute('data-ref');
+            if (key) {
+                e.target.classList.toggle('hover', !!reveal);
+                refEl[key].classList.toggle('hover', !!reveal)
+            }
+        }
+    };
+  </script>
+</head>
+<body>
+
+<h2>Welcome</h2>
+
+<p>Welcome to the Hypergrid API Tutorial.</p>
+
+<h3>User interface</h3>
+
+<p>Hover over (or click on) each of the following features:</p>
+
+<ul>
+  <li data-ref="tutorial"><strong>This tabbed instructional area</strong> (tabs explained below)</li>
+  <li data-ref="pager"><strong>Paging controls</strong> <em>(above)</em></li>
+  <li data-ref="grid"><strong>Live Hypergrid instance</strong> <em>(right)</em></li>
+  <li data-ref="workbench"><strong>Tabbed Workbench area</strong> <em>(right, below grid)</em></li>
+  <li data-ref="divider"><strong>Interactive divider</strong> can be dragged up and down <em>(between grid and Workbench)</em></li>
+</ul>
+
+<h3>Instructional tabs</h3>
+
+<h4 class="tab">Tutorial</h4>
+<ul class="dense">
+  <li>The tutorial proper (what you are viewing right now)</li>
+  <li>Has multiple pages (this is the first page)</li>
+  <li>Use the paging controls (or the <span class="keycap">&#x2190;</span> and <span class="keycap">&#x2192;</span> keys) to navigate through the tutorial</li>
+  <li>Take the rest of the tutorial to learn the Hypergrid API</li>
+</ul>
+
+<h4 class="tab">Code Snippets</h4>
+<ul class="dense">
+  <li>Appears when and only when the current tutorial page has code snippets to offer</li>
+  <li>It’s visible right now for illustrative purposes. (Check it out!)</li>
+</ul>
+
+<div class="curvy-tab-conditional" name="Code Snippets">
+  Code snippets would go here:
+  <pre>// I am a code snippet</pre>
+</div>
+
+<h4 class="tab">ToC</h4>
+<ul class="dense">
+  <li><span style="font-family:sans-serif">ToC</span> stands for <em>Table of Contents.</em></li>
+  <li>Contains an overview of the tutorial</li>
+  <li>The tutorial’s current page is always <span style="bckground-color:yellow">highlighted in yellow</span> in the ToC</li>
+</ul>
+
+<h4 class="tab">Jump Start</h4>
+<ul class="dense">
+  <li>To get up and running with Hypergrid in a matter of minutes, go directly to the <em>Jump Start</em> tab</li>
+</ul>
+
+<h4 class="tab">Help</h4>
+<ul class="dense">
+  <li>Explains how to use the Workbench (<em>right</em>), which you’ll need for the tutorial’s learn-by-doing <em>Activities.</em></li>
+  <li>You can also use the Workbench for your own experimenting and informal development</li>
+</ul>
+
+<div class="sidebar">
+  Check out the other tabs.
+  <em style="display:block">– or –</em>
+  Click the <span class="clickable page-next"></span> button above to go to the next page of the tutorial.
+</div>
+
+</body>
+</html>

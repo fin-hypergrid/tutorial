@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="index.css">
+  <script src="polyfills.js"></script>
+  <script src="https://unpkg.com/get-smart@1.0/umd/get-smart.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body>
+<h2 class="continued">The Scrollbar tab</h2>
+
+<h3>Repositioning the scrollbars off the grid content</h3>
+
+The following activity employs a simple strategy for moving the scrollbars off the grid content.
+Rather than move the scrollbars into “uncharted” screen real estate, this strategy instead shrinks the grid just enough to move it away from the scrollbars, which actually remain where they were. This is accomplished by setting the grid’s bottom and right margins.
+
+<div class="note">Grid margins can also be set as an option to the <a target="doc" href="https://fin-hypergrid.github.io/core/doc/Hypergrid.html"><code>Hypergrid</code> constructor</a>.</div>
+
+<article class="activity">
+  <header><div>SB-4</div>Reposition the scrollbars</header>
+  <section>
+    <ol>
+      <li>
+        In the <span class="tab">Scrollbar</span> tab, shrink the grid away from the the scrollbars enough to leave the scrollbar thumbs completely outside the grid content:
+        <pre>div.hypergrid-container > div:first-child {
+    bottom: 15px;
+    right: 15px;
+}</pre>
+        The <code>box-shadow</code> setting would not be needed normally; it just undoes the fuzzy shadow around the grid that this workbench applies, and which was interfering visually with the new scrollbar positioning.
+      </li>
+      <li>Click the <span class="api-button">injectCSS('custom', …)</span> button to update the custom <code class="tag">style</code> element</li>
+      <li class="observe">Although the scrollbars have not actually moved, they no longer overlay the grid because we’ve made the grid a little smaller.</li>
+    </ol>
+    <p>Again, we urge you to go back to the <a href="javascript:window.top.tutorial.page('The Scrollbar tab (Activity SB-1 - Reveal the scrollbars).html', '')">first page of this section</a> and take a look at its <span class="tab">Code Snippets</span> tab. There you will find examples of gutter borders and of moving the scrollbars to the opposite edges of the grid.</p>
+  </section>
+</article>
+
+<!--
+<table class="footnote">
+  <caption><div></div></caption>
+  <tr><td>*</td><td></td></tr>
+</table>
+-->
+
+</body>
+</html>
