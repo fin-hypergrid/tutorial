@@ -49,7 +49,6 @@
         };
 
         function highlight(reveal, e) {
-            console.log(e.type);
             var key = e.target.getAttribute('data-ref');
             if (key) {
                 e.target.classList.toggle('hover', !!reveal);

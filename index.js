@@ -55,6 +55,10 @@ window.onload = getSmart.bind(null, {
         toc = [], // built by walk below
         pagerOptions = { path: 'pages/', toc: toc };
 
+    // load following *after* tutorialTabBar instantiation so <span class="tab"> can be enlivened
+    document.querySelector('div[name="Help"] > iframe').src = "pages/Help.html";
+    document.querySelector('div[name="Jump Start"] > iframe').src = "pages/Jump%20Start.html";
+
     // flatten the hierarchical defaults.toc into pagerOptions.toc
     walk(defaults.toc);
     function walk(list) {
@@ -75,6 +79,11 @@ window.onload = getSmart.bind(null, {
 
     tutorial = new CurvyTabsPager(tutorialPagerContainer, tutorialTabBar, pagerOptions);
     tutorial.goFirstEl.style.display = tutorial.goLastEl.style.display = 'none';
+
+    tutorial.tabBar.onclick = function(e) {
+        var isTutorialTab = e.detail.content.getAttribute('name') === 'Tutorial';
+        document.getElementById('scroll-warning').style.display = isTutorialTab ? null : 'none';
+    };
 
     // listen for page events to highlight the current page's line in the ToC
     document.addEventListener('curvy-tabs-pager-paged', function(e) {
@@ -159,6 +168,11 @@ window.onload = getSmart.bind(null, {
 
         tutorial.tabBar.container.style.width = width - 12 + 'px';
         tutorial.tabBar.container.style.height = height - 58 + 'px';
+
+        var tutorialWindow = tutorial.tabBar.getTab('Tutorial').querySelector('iframe').contentWindow;
+        if (tutorialWindow.resize) {
+            tutorialWindow.resize();
+        }
     });
 
     function callApi(type, confirmation) {

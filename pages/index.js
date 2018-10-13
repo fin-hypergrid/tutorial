@@ -1,24 +1,27 @@
 'use strict';
 
+var resize; // called from window.parent
+
 window.addEventListener('load', function() {
-    if (registerTab()) {
-        injectSVGs();
+    registerTab();
 
-        window.addEventListener('scroll', setScrollWarning);
-        setScrollWarning();
+    injectSVGs();
 
-        enlivenClickables();
-        enlivenTabSpans();
-        setTitleAttribs();
-    }
+    window.addEventListener('scroll', setScrollWarning);
+    setScrollWarning();
+
+    enlivenClickables();
+    enlivenTabSpans();
+    setTitleAttribs();
+
+    resize = setScrollWarning;
+
+    ///////////////////////
 
     function registerTab() {
-        if (!window.top.tabBar) {
-            return;
+        if (window.top.tutorial.contentWindow === window) {
+            parent.dispatchEvent(new CustomEvent('curvy-tabs-pager-register'));
         }
-
-        parent.dispatchEvent(new CustomEvent('curvy-tabs-pager-register', { detail: { window: window } }));
-        return true;
     }
 
     function injectSVGs() {
@@ -80,7 +83,7 @@ window.addEventListener('load', function() {
             tabFoundAndVisible = tab.content && window.getComputedStyle(tab.content).display !== 'none';
 
         if (tabFoundAndVisible) {
-            tab.bar.selected = tab.content;
+            tab.bar.select(tab.content, true);
         }
     }
 

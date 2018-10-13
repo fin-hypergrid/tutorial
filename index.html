@@ -17,7 +17,7 @@
   <script src="https://unpkg.com/curvy-tabs@2.3/umd/curvy-tabs.js"></script>
 
   <!--<script src="../curvy-tabs-pager/umd/curvy-tabs-pager.js"></script>-->
-  <script src="https://unpkg.com/curvy-tabs-pager@2.1/umd/curvy-tabs-pager.js"></script>
+  <script src="https://unpkg.com/curvy-tabs-pager@2.2/umd/curvy-tabs-pager.js"></script>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">
@@ -32,9 +32,7 @@
   <div style="background-color:#dff; overflow:hidden" name="Data">
     <span id="reset-data" class="reset-button danger" title="Reset data to default. (This icon is only enabled when data have been edited.)"></span>
     <input type="button" class="api" value="Apply" onclick="callApi('data', 'Data set.')"
-     title="grid.setData(…, { schema: [] }) // resets schema
-
-where … represents the evaluated code in the editor below.">
+     title="grid.setData(obj, { schema: [] }) // resets schema; obj represents the object derived by evaluating the code in the editor below.">
     <span class="feedback"></span>
     <textarea id="data"></textarea>
   </div>
@@ -43,9 +41,7 @@ where … represents the evaluated code in the editor below.">
     <span id="reset-state" class="reset-button danger" title="Reset this state object to default. (This icon is only enabled when state has been edited.)"></span>
     <!--<input type="button" class="api" value="grid.addState(…)" onclick="callApi('addState', 'state', 'State has been added')" title="addState() assigns the members of the state object defined below to grid.properties *without* clearing it first.">-->
     <input type="button" class="api" value="Apply" onclick="callApi('state', 'State set.')"
-     title="grid.setState(…)
-
-where … represents the evaluated code in the editor below.
+     title="grid.setState(obj) // obj represents the object derived by evaluating the code in the editor below.
 
 Note: This call first deletes all members of grid.properties and then assigns the members of the state object defined below to it. (Contrast with grid.addState.)">
     <span class="feedback"></span>
@@ -60,9 +56,7 @@ Note: This call first deletes all members of grid.properties and then assigns th
 
     <span id="delete-localizer" class="delete-button danger" title="Delete this localizer. (This icon only appears for custom localizers you added yourself.)"></span>
 
-    <input type="button" class="api" value="Apply" title="grid.localization.add(…)
-
-where … represents the evaluated code in the editor below.">
+    <input type="button" class="api" value="Apply" title="grid.localization.add(obj) // obj represents the object derived by evaluating the code in the editor below.">
     <span class="feedback">Saved</span>
     <textarea id="localizer-script"></textarea>
   </div>
@@ -75,9 +69,7 @@ where … represents the evaluated code in the editor below.">
 
     <span id="delete-editor" class="delete-button danger" title="Delete this cell editor. (This icon is only enabled for custom cell editors you added yourself.)"></span>
 
-    <input type="button" class="api" value="Apply" title="grid.cellEditors.add(…)
-
-where … represents the evaluated code in the editor below.">
+    <input type="button" class="api" value="Apply" title="grid.cellEditors.add(obj) // where obj represents the object derived by evaluating the code in the editor below.">
     <span class="feedback">Saved</span>
     <textarea id="editor-script"></textarea>
   </div>
@@ -92,9 +84,7 @@ where … represents the evaluated code in the editor below.">
     </label>
 
     <input type="button" class="api" value="Apply" onclick="callApi('scrollbars', 'Stylesheet injected.')"
-     title="injectCSS('custom', …)
-
-where … represents the eval’d code in the editor below.
+     title="injectCSS('custom', obj) // obj represents the object derived by evaluating the code in the editor below.
 
 Ctrl + click to see the injectCSS method which is not part of the API.">
     <span class="feedback"></span>
@@ -129,11 +119,11 @@ Ctrl + click to see the injectCSS method which is not part of the API.">
   </div>
 
   <div style="background-color:ivory; overflow:hidden" name="Jump Start">
-    <iframe src="pages/Jump Start.html"></iframe>
+    <iframe></iframe>
   </div>
 
   <div style="background-color:#ddadff; overflow:hidden" name="Help">
-    <iframe src="pages/Help.html"></iframe>
+    <iframe></iframe>
   </div>
 </div>
 
