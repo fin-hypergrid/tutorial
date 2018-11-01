@@ -5,12 +5,15 @@
   <title>Hypergrid API Tutorial</title>
   <link rel="stylesheet" href="index.css">
 
-  <script src="pages/polyfills.js"></script>
-
   <!--<script src='../build/demo/build/fin-hypergrid.js'></script>-->
-  <script src='https://fin-hypergrid.github.io/core/3.0.3/build/fin-hypergrid.js'></script>
+  <script src="https://fin-hypergrid.github.io/core/3.1.0/build/fin-hypergrid.js"></script>
 
-  <script src="https://unpkg.com/get-smart@1.0/umd/get-smart.js"></script>
+  <script src="polyfills.js"></script>
+
+  <!--<script src='../get-smart/umd/get-smart.js'></script>-->
+  <script src="https://unpkg.com/get-smart@2.0/umd/get-smart.js"></script>
+
+  <script src="enhance.js"></script>
   <script src="index.js"></script>
 
   <!--<script src="../curvy-tabs/umd/curvy-tabs.js"></script>-->
@@ -24,23 +27,25 @@
 </head>
 <body>
 
-<h1 style="margin:.5em; color:white; text-shadow: 1px 1px 2px #444">Hypergrid API Tutorial</h1>
+
+<h1 style="margin:.5em; color:white; text-shadow: 1px 1px 2px #444">
+  <span style="cursor:help; user-select:none;" onclick="alert(this.getAttribute('title'))">Hypergrid API Tutorial</span>
+</h1>
 
 <div id="hypergrid" style="position:absolute; top:8px; height:145px; width:calc(50% - 16px); right:8px;"></div>
 
 <div id="editors" class="curvy-tabs-container" style="position:absolute; height:calc(100% - 210px); width:calc(50% - 16px); bottom:8px; right:8px;">
-  <div style="background-color:#dff; overflow:hidden" name="Data">
+  <div style="background-color:#dff" name="Data">
     <span id="reset-data" class="reset-button danger" title="Reset data to default. (This icon is only enabled when data have been edited.)"></span>
-    <input type="button" class="api" value="Apply" onclick="callApi('data', 'Data set.')"
+    <input type="button" class="api" value="Apply"
      title="grid.setData(obj, { schema: [] }) // resets schema; obj represents the object derived by evaluating the code in the editor below.">
     <span class="feedback"></span>
     <textarea id="data"></textarea>
   </div>
 
-  <div style="background-color:#fdf; overflow:hidden" name="State">
+  <div style="background-color:#fdf" name="State">
     <span id="reset-state" class="reset-button danger" title="Reset this state object to default. (This icon is only enabled when state has been edited.)"></span>
-    <!--<input type="button" class="api" value="grid.addState(…)" onclick="callApi('addState', 'state', 'State has been added')" title="addState() assigns the members of the state object defined below to grid.properties *without* clearing it first.">-->
-    <input type="button" class="api" value="Apply" onclick="callApi('state', 'State set.')"
+    <input type="button" class="api" value="Apply"
      title="grid.setState(obj) // obj represents the object derived by evaluating the code in the editor below.
 
 Note: This call first deletes all members of grid.properties and then assigns the members of the state object defined below to it. (Contrast with grid.addState.)">
@@ -48,7 +53,7 @@ Note: This call first deletes all members of grid.properties and then assigns th
     <textarea id="state"></textarea>
   </div>
 
-  <div style="background-color:#ffd; overflow:hidden" name="Format">
+  <div style="background-color:#ffd" name="Format">
     <input type="button" value="Locals" class="locals">
     Load: <select id="localizer-dropdown"></select>
 
@@ -61,7 +66,7 @@ Note: This call first deletes all members of grid.properties and then assigns th
     <textarea id="localizer-script"></textarea>
   </div>
 
-  <div style="background-color:#ddf; overflow:hidden" name="Edit">
+  <div style="background-color:#ddf" name="Edit">
     <input type="button" value="Locals" class="locals">
     Load: <select id="editor-dropdown"></select>
 
@@ -74,21 +79,24 @@ Note: This call first deletes all members of grid.properties and then assigns th
     <textarea id="editor-script"></textarea>
   </div>
 
-  <div style="background-color:#dfd; overflow:hidden" name="Scrollbar">
+  <div style="background-color:#dfd" name="Scrollbars">
     <span id="reset-scrollbars" class="reset-button danger" title="Reset scrollbars stylesheet to default (just comments and selectors with no styles). (This icon is only enabled when the stylesheet has been edited.)"></span>
 
     <label title='Checking this will disable the default scrollbars stylesheet loaded by the finbars module into the DOM (&lt;style id="injected-stylesheet-finbar-base"&gt;…&lt;/style&gt;). In this case your stylesheet must specify the finbars style rules in full, rather than merely modify them.'>
       <input type="checkbox" style="margin-left:2em" onclick="document.getElementById('injected-stylesheet-finbar-base').disabled=this.checked">
       Replace
-      <a target="github" href="https://github.com/fin-hypergrid/finbars/blob/master/src/finbars.css">finbars.css</a>
+      <a target="github" href="https://github.com/fin-hypergrid/finbars/blob/master/src/finbars.css"
+       title="Default scrollbars stylesheet.">finbars.css</a>
     </label>
 
-    <input type="button" class="api" value="Apply" onclick="callApi('scrollbars', 'Stylesheet injected.')"
-     title="injectCSS('custom', obj) // obj represents the object derived by evaluating the code in the editor below.
-
-Ctrl + click to see the injectCSS method which is not part of the API.">
+    <input type="button" class="api" value="Apply"
+     title="injectCSS('custom', obj) // obj represents the object derived by evaluating the code in the editor below.">
     <span class="feedback"></span>
     <textarea id="scrollbars"></textarea>
+  </div>
+
+  <div style="background-color:#fde4dc" name="Help">
+    <iframe></iframe>
   </div>
 
   <div style="background-color:#aaa" name="Settings">
@@ -98,31 +106,28 @@ Ctrl + click to see the injectCSS method which is not part of the API.">
       <td>This will reset all tabs to their default values, removing all edits, including all custom localizers and custom cell editors.</td>
     </tr></table>
   </div>
-
-  <div style="background-color:#ddadff" name="Help">
-  </div>
 </div>
 
 <div class="divider"></div>
 
 <div id="tutorial" class="curvy-tabs-container" style="position:absolute; height:calc(100% - 58px); width:calc(50% - 12px); bottom:8px">
-  <div style="background-color:#f4f4f4; overflow:hidden" name="Tutorial">
+  <div style="background-color:#f4f4f4" name="Tutorial">
     <iframe></iframe>
   </div>
 
-  <div style="background-color:#ffc; overflow:hidden; display:none" name="Code Snippets">
+  <div style="background-color:#ffc; display:none" name="Code Snippets">
     <iframe src="pages/blank.html"></iframe>
   </div>
 
-  <div style="background-color:ivory; overflow:hidden" name="ToC">
+  <div style="background-color:ivory" name="ToC">
     <iframe src="pages/Table%20of%20Contents.html"></iframe>
   </div>
 
-  <div style="background-color:ivory; overflow:hidden" name="Jump Start">
+  <div style="background-color:ivory" name="Jump Start">
     <iframe></iframe>
   </div>
 
-  <div style="background-color:#ddadff; overflow:hidden" name="Help">
+  <div style="background-color:#fde4dc" name="Help">
     <iframe></iframe>
   </div>
 </div>

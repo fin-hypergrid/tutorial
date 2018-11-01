@@ -1,17 +1,18 @@
 'use strict';
 
-(function() {
+fin.polyfills = function(window) {
+
     // IE 11 missing .find
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
-    if (!Array.prototype.find) {
-        Array.prototype.find = function (predicate) { // eslint-disable-line no-extend-native
+    if (!window.Array.prototype.find) {
+        window.Array.prototype.find = function (predicate) { // eslint-disable-line no-extend-native
             if (this === null) {
-                throw new TypeError('Array.prototype.find called on null or undefined');
+                throw new window.TypeError('Array.prototype.find called on null or undefined');
             }
             if (typeof predicate !== 'function') {
-                throw new TypeError('predicate must be a function');
+                throw new window.TypeError('predicate must be a function');
             }
-            var list = Object(this);
+            var list = window.Object(this);
             var length = list.length >>> 0;
             var thisArg = arguments[1];
             var value;
@@ -26,9 +27,10 @@
         };
     }
 
+    // IE 11 missing .findIndex
     // Lite version of: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex#Polyfill
-    if (typeof Array.prototype.findIndex !== 'function') {
-        Array.prototype.findIndex = function(predicate) {
+    if (typeof window.Array.prototype.findIndex !== 'function') {
+        window.Array.prototype.findIndex = function(predicate) {
             var context = arguments[1];
             for (var i = 0, len = this.length; i < len; i++) {
                 if (predicate.call(context, this[i], i, this)) {
@@ -43,7 +45,7 @@
     if ( typeof window.CustomEvent !== "function" ) {
         window.CustomEvent = function(event, params) {
             params = params || { bubbles: false, cancelable: false, detail: undefined };
-            var evt = document.createEvent('CustomEvent');
+            var evt = window.document.createEvent('CustomEvent');
             evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
             return evt;
         };
@@ -52,6 +54,7 @@
 
     // IE 11 does not support 2nd param `force` of `classList.toggle`
     if (window.DOMTokenList.prototype.toggle.toString().indexOf('key') < 0) {
+        var toggle = window.DOMTokenList.prototype.toggle;
         window.DOMTokenList.prototype.toggle = function(key, force) {
             if (arguments.length < 2) {
                 toggle.call(this, key);
@@ -65,4 +68,13 @@
             }
         };
     }
-})();
+
+    // Some browsers already set NodeList.prototype.forEach but not IE 11 and none set others
+    // for return from querySelectorAll, getElementsBy*
+    ['forEach', 'find', 'findIndex'].forEach(function(methodName) {
+        window.NodeList.prototype[methodName] = window.HTMLCollection.prototype[methodName] = window.Array.prototype[methodName];
+    });
+
+};
+
+fin.polyfills(window);

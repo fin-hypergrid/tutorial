@@ -23,9 +23,10 @@ li {
 ul.dense, ol.dense {
     margin-top: 0;
     margin-bottom: 0;
+    padding-left: 2em;
 }
 ol ul li, ol ol li, ul ul li, ul ol li, ul.dense li, ol.dense li {
-    margin-top: 0;
+    margin: 0 0 0 1.5em;
 }
 pre {
     font: 8pt monospace;
@@ -95,14 +96,12 @@ html[data-platform*='Win32'] span.page-next::before {
     font-size: 180%;
 }
 a.code, code {
-    font-family: verdana, monospace;
-    font-size: 77%;
+    font: bold 88% monospace;
     color: #444;
     background-color: #ddd;
     padding: 2px 4px;
     border-radius: 4px;
     /* border: 1px solid #bbb; */
-    font-weight: bold;
     white-space: nowrap;
 }
 a.code:hover {
@@ -129,18 +128,18 @@ h2 {
 }
 h3 {
     color: #666;
-    margin-bottom: .3em;
+    margin-bottom: .33em;
 }
 h4 {
     color: #888;
-    margin-bottom: .3em;
+    margin-bottom: .33em;
 }
 h5 {
     color: #aaa;
-    margin-bottom: .3em;
+    margin-bottom: .33em;
 }
 div.note {
-    font-size: 9pt;
+    font-size: 10pt;
     margin: .9em 1em;
     padding: .4em 1em;
     border-left: 8px solid #ccc;
@@ -272,12 +271,9 @@ h4.tab {
 }
 h4.tab + * {
     border: 1px solid grey;
-    padding: .5em;
+    padding: .65em .5em .5em .5em;
     margin-top: -5px;
     border-radius: 8px;
-}
-h4.tab + ul {
-    padding-left: 1.75em;
 }
 
 /* Tags - use with <span> or <code> tag */
@@ -306,12 +302,10 @@ span.macOS:after {
 }
 
 span.reset-button > svg {
-    position: relative;
-    top: 7px;
+    vertical-align: middle;
 }
 span.delete-button > svg {
-    position: relative;
-    top: 3px;
+    vertical-align: middle;
 }
 span.danger > svg {
     color: #cb2431;
@@ -319,4 +313,8 @@ span.danger > svg {
 }
 li.current-page, li.current-page > span {
     background-color: yellow;
+}
+a.page {
+    font-style: italic;
+    font-weight: bold;
 }

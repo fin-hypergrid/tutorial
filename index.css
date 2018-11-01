@@ -1,6 +1,7 @@
 body {
     font: 9pt sans-serif;
     margin: 8px;
+    visibility: hidden; /* until loaded for prettier start up */
 }
 table {
     border-spacing: 12px 6px;

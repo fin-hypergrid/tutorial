@@ -3,28 +3,27 @@
 module.exports = [
     "Welcome.html",
     [
-        "The Editors tab set.html",
         "The Tutorial tab set.html"
     ],
-    "The Data tab.html",
+    "Grid Data.html",
     [
         "Activity D-1 - Edit a cell value in the grid.html",
         "Activity D-2 - Edit a cell value in the Data editor.html",
         "Activity D-3 - Add a row in the Data editor.html"
     ],
-    "The State tab.html",
+    "Grid State.html",
     [
         "Activity S-1 - Edit a grid property",
         "Properties Basics.html",
         "Activity S-2 - Edit a column property.html"
     ],
-    "The Format Tab.html",
+    "Formatters.html",
     [
         "Activity S-3 - Bind a cell to a localizer.html",
         "Adding a new localizer.html",
         "Activity L-1 - Create a localizer.html"
     ],
-    "The Edit tab.html",
+    "Cell Editors.html",
     [
         "Activity CE-1 - Edit a cell without a localizer.html",
         "Activity CE-2 - Edit a cell with a localizer.html"
@@ -35,7 +34,7 @@ module.exports = [
         "The invalid() method.html",
         "Activity CE-3 - Returning parsing errors.html"
     ],
-    "The Scrollbar tab (Activity SB-1 - Reveal the scrollbars).html",
+    "Activity SB-1 - Scrollbars.html",
     [
         "The finbars custom scrollbar module.html",
         "The default scrollbar stylesheet.html",

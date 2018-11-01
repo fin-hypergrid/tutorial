@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="index.css">
-  <script src="polyfills.js"></script>
   <script src="index.js"></script>
 
   <style>
     ul:not(:first-of-type) {
       font-size: smaller;
     }
-    ul:first-of-type > li {
+    span[data-ref] {
       border: 1px solid transparent;
       border-radius: 5px;
-      padding: 3px 6px;
+      padding: 3px 5px;
       user-select: none;
       cursor: pointer;
     }
-    ul:first-of-type > li.hover {
+    span[data-ref].hover {
       border-color: red;
       background-color: #f4f4f4;
     }
@@ -25,25 +24,24 @@
 
   <script>
     window.onload = function() {
-        var liEls = document.querySelectorAll('ul:first-of-type > li');
+        var liEls = document.querySelectorAll('span[data-ref]');
         var refEl = {
             tutorial: window.top.tutorial.tabBar.selected,
             pager: window.top.document.getElementById('page-panel'),
             grid: window.top.document.getElementById('hypergrid'),
             workbench: window.top.tabBar.selected,
-            divider: window.top.document.getElementsByClassName('divider')[0],
-
+            divider: window.top.document.getElementsByClassName('divider')[0]
         };
 
         var on = highlight.bind(null, true),
             off = highlight.bind(null, null);
 
-        Array.prototype.forEach.call(liEls, function(li) {
+        liEls.forEach(function(li) {
             li.onmouseenter = li.onmousedown = on;
             li.onmouseleave = off;
         });
         window.onmouseup = function(e) {
-            Array.prototype.forEach.call(liEls, function(el) {
+            liEls.forEach(function(el) {
                 el.dispatchEvent(new CustomEvent('mouseleave'))
             });
         };
@@ -69,11 +67,11 @@
 <p>Hover over (or click on) each of the following features:</p>
 
 <ul>
-  <li data-ref="tutorial"><strong>This tabbed instructional area</strong> (tabs explained below)</li>
-  <li data-ref="pager"><strong>Paging controls</strong> <em>(above)</em></li>
-  <li data-ref="grid"><strong>Live Hypergrid instance</strong> <em>(right)</em></li>
-  <li data-ref="workbench"><strong>Tabbed Workbench area</strong> <em>(right, below grid)</em></li>
-  <li data-ref="divider"><strong>Interactive divider</strong> can be dragged up and down <em>(between grid and Workbench)</em></li>
+  <li><span data-ref="tutorial"><strong>This tabbed instructional area</strong> (tabs explained below)</span></li>
+  <li><span data-ref="pager"><strong>Paging controls</strong> <em>(above)</em></span></li>
+  <li><span data-ref="grid"><strong>Live Hypergrid instance</strong> <em>(right)</em></span></li>
+  <li><span data-ref="workbench"><strong>Tabbed Workbench area</strong> <em>(right, below grid)</em></span></li>
+  <li><span data-ref="divider"><strong>Interactive divider</strong> can be dragged up and down <em>(between grid and Workbench)</em></span></li>
 </ul>
 
 <h3>Instructional tabs</h3>
@@ -101,7 +99,7 @@
 <ul class="dense">
   <li><span style="font-family:sans-serif">ToC</span> stands for <em>Table of Contents.</em></li>
   <li>Contains an overview of the tutorial</li>
-  <li>The tutorial’s current page is always <span style="bckground-color:yellow">highlighted in yellow</span> in the ToC</li>
+  <li>The tutorial’s current page is always <span style="background-color:yellow">highlighted in yellow</span> in the Table of Contents</li>
 </ul>
 
 <h4 class="tab">Jump Start</h4>

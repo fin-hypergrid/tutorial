@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="index.css">
-  <script src="polyfills.js"></script>
   <script src="index.js"></script>
 </head>
 
 <body>
-<h2 class="continued">The Scrollbar tab</h2>
+<h2 class="continued">The Scrollbars tab</h2>
 
 <h3>The <code>finbars</code> custom scrollbar module</h3>
 
@@ -51,6 +50,7 @@
 <p>The following observations are of <span class="macOS"></span> 10.13 (High Sierra):</p>
 
 <p><span class="macOS"></span> trackpad scrollbars, c. 2018:</p>
+
 <table style="margin-left:1.5em"><tr style="vertical-align:top">
   <td><img src="img/trackpad-scrollbars.png" height="100" width="100"></td>
   <td><ul style="margin-top:0">
@@ -59,15 +59,24 @@
   </ul></td>
 </tr></table>
 
-<p><span class="macOS"></span> mouse scrollbars, c. 2018 (<i>i.e.,</i> when a mouse is plugged into the Mac):</p>
+<p>When <span class="macOS"></span> mouse scrollbars, c. 2018, appear is controlled by the <em>General</em> control panel, under <em>Show scroll bars:</em></p>
+
+<img src="img/show-scroll-bars.png" width="418" height="80" style="border:1px solid black">
+
+<p>When mouse scrollbars are shown they are supposed to look like this:</p>
+
 <table style="margin-left:1.5em"><tr style="vertical-align:top">
   <td><img src="img/mouse-scrollbars.png" height="100" width="100"></td>
   <td><ul style="margin-top:0">
-    <li style="margin-top:0">The gutters are now shown all the time</li>
+    <li style="margin-top:0">The gutters are now shown all the time (if set to <em>Automatically</em> or <em>Always</em>)</li>
     <li>The the content area is reduced to accommodate the scrollbars</li>
     <li>The thumbs are now wider</li>
   </ul></td>
 </tr></table>
+
+<p>Chrome v70 however does not handle this well, requiring restarting, and then display only the window scrollbars are correctly. Scrollable elements are displayed with an empty scrollbar gutter.</p>
+
+<p>And this is just on <span class="macOS"></span>. Other platforms have their own quirks. Hypergrid avoids all this uncertainty. Scrollbars are <em>always</em> shown. By default they are styled to the 2015 <span class="macOS"></span> but the application develop can restyle them, and that’s what we’ll be discussing on the following pages.</p>
 
 <p><strong>Go to the next page</strong> for a discussion on the specifics of the default <code>finbars</code> stylesheet.</p>
 

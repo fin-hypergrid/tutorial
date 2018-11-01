@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="index.css">
+  <script src="index.js"></script>
+</head>
+
+<body>
+<h2>The Scrollbars tab</h2>
+
+<p>The <span class="tab">Scrollbars</span> tab is for experimenting with styling and positioning the two Hypergrid scrollbars.</p>
+
+<h3>TL;DR</h3>
+For a full tutorial about the scrollbars, read on. If you just want the essentials, switch to the <span class="tab">Code Snippets</span> tab.
+
+<h3>If you don’t see the vertical scrollbar…</h3>
+<p>
+  <em>The problem:</em>
+  You don't have enough rows of data.
+  <em>The solution:</em>
+  Reset your data to the new default, a snapshot of the <strong>NASDAQ&#x2011;100</strong> Index as of 10/15/2018, which has a full <strong>100 rows</strong>.
+</p>
+<article class="activity">
+  <header><div>SB-1</div>Reset the data</header>
+  <section>
+    <ol>
+      <li>Switch to the <span class="tab">Data</span> tab</li>
+      <li>Click the <span class="reset-button danger"></span> button to restore the data to the default</li>
+      <li>Click the <input type="button" value="Apply"> button to set the grid data</li>
+    </ol>
+  </section>
+</article>
+
+<h3>If you don’t see the horizontal scrollbar…</h3>
+<p>
+  <em>The problem:</em>
+  The grid canvas is too wide for the columns.
+  <em>The solution:</em>
+  Manually widen one or more columns by dragging the divider to the right of each column header rightwards.
+</p>
+
+<p><strong>Go to the next page</strong> for some background on the <code>finbars</code> custom scrollbar module.</p>
+
+<div class="curvy-tab-conditional" name="Code Snippets">
+  <h3>Scrollbar HTML markup</h3>
+
+  <p>Hypergrid uses a custom scrollbars module (<a target="npm" href="https://www.npmjs.com/package/finbars">finbars</a>) which injects simple HTML elements into the grid container element, following the grid’s <code class="tag">canvas</code> element:</p>
+<pre><span class="tag">div class="finbar-horizontal"</span><span class="tag">div class="thumb"</span><span class="close-tag">div</span><span class="close-tag">div</span>
+<span class="tag">div class="finbar-vertical"</span><span class="tag">div class="thumb"</span><span class="close-tag">div</span><span class="close-tag">div</span></pre>
+
+  <h3>Scrollbar CSS</h3>
+
+  <p>The above HTML elements are styled and positioned by the default scrollbars stylesheet (<a target="github" href="https://github.com/fin-hypergrid/finbars/blob/master/src/finbars.css">finbars.css</a>). Take a good look at the selectors in this file. They’re straight-forward and annotated.</p>
+
+  <p>The <code>finbars</code> module creates a new <code><span class="tag">style id="injected-stylesheet-finbar-base"</span>&hellip;<span class="close-tag">style</span></code> element and inserts it into the DOM.</p>
+
+  <p>There are two approaches to custom scrollbar styling: Override (ammend) the default scrollbar styling or create new styling to completely replace the default styling.</p>
+
+  <h3>Override selected styles in <code>finbars.css</code></h3>
+
+  <p>Create a new stylesheet with your own rules with the style(s) you wish to override. Refer to the selectors from <code>finbars.css</code>. Insert it into the DOM <em>after</em> the default scrollbar stylesheet (so your rules’ styles will override theirs):</p>
+
+  <pre>var defaultStylesheet = document.getElementById('injected-stylesheet-finbar-base');
+var myStylesheet = document.createElement('style');
+myStylesheet.innerText = '/* my stylesheet overrides go here */';
+defaultStylesheet.parentElement.insertBefore(myStylesheet, defaultStylesheet.nextElementSibling);</pre>
+
+  <h3>Replace <code>finbars.css</code> completely</h3>
+
+  <p>Create your own rules using the selectors from <code>finbars.css</code> to <em>completely</em> style the scrollbar and thumb elements including size and position as well as appearance:</p>
+
+  <pre>document.getElementById('injected-stylesheet-finbar-base').innerHTML = '/* my complete stylesheet goes here */';</pre>
+
+  <h3>Examples</h3>
+  The following examples take the “override” approach, keeping <code>finbars.css</code> in place and enabled. Try cutting & pasting these examples to the <span class="tab">Scrollbars</span> tab (leave the <i>Replace</i> checkbox <em>un</em>checked) and observe the results.
+
+  <h4>A. Square the thumbs</h4>
+  <pre>div.finbar-vertical > .thumb, div.finbar-horizontal > .thumb {
+    border-radius: 0;
+    box-shadow: none; /* remove subtle thumb edge effect */
+}</pre>
+
+  <h4>B. Make the thumbs darker</h4>
+  <pre>div.finbar-vertical > .thumb, div.finbar-horizontal > .thumb {
+    background-color: black;
+}</pre>
+
+  <h4>C. Move the scrollbars off the grid</h4>
+  The default position is superimposed along the bottom and right edges of the grid <code class="tag">canvas</code> (with transparent scrollbar gutters, styled after the <span class="macOS"></span> trackpad scrollbars). The following simple strategy shrinks the grid content slightly from its container size, leaving the scrollbars where they were but now outside the grid:
+  <pre>div.hypergrid-container > div:first-child {
+    bottom: 15px;
+    right: 15px;
+}</pre>
+  <div class="note">The above selector is not found in <code>finbars.css</code>.</div>
+  More examples of repositioning the scrollbars can be found at the bottom of the page.
+
+  <h4>D. Make the scrollbar gutter backgrounds visible</h4>
+  <pre>div.finbar-vertical, div.finbar-horizontal {
+    background-color: yellow;
+    margin: 0;
+}
+/* Move the now-visible gutters off the grid so they don’t obscure grid content: */
+div.hypergrid-container > div:first-child {
+    bottom: 15px;
+    right: 15px;
+}</pre>
+
+  <h4>E. Make the scrollbar gutter borders visible</h4>
+  <pre>div.finbar-vertical, div.finbar-horizontal {
+    <span style="background-color:yellow">border: 1px solid black;</span>
+    background-color: white;
+    box-sizing: border-box;
+    margin: 0;
+}
+div.finbar-vertical > .thumb {
+    margin: 2px 1px;
+}
+div.finbar-horizontal > .thumb {
+    margin: 1px 2px;
+}
+/* Move the now-visible gutters off the grid so they don’t obscure grid content: */
+div.hypergrid-container > div:first-child {
+    bottom: 11px;
+    right: 11px;
+}</pre>
+The <code style="background-color:yellow">border</code> style setting is the salient point here; the rest are cosmetic tweaks to the default styles.
+
+  <h4>F. Combine all of the above</h4>
+  Darker, square thumbs over white scrollbars with dark borders, repositioned off the grid:
+<pre>div.finbar-vertical, div.finbar-horizontal {
+    border: 1px solid black;
+    background-color: white;
+    box-sizing: border-box;
+    margin: 0;
+}
+div.finbar-horizontal {
+    border-right: 0;
+}
+div.finbar-vertical > .thumb, div.finbar-horizontal > .thumb {
+    border-radius: 0;
+    box-shadow: none;
+    background-color: black;
+}
+div.finbar-vertical > .thumb {
+    margin: 2px 1px;
+}
+div.finbar-horizontal > .thumb {
+    margin: 1px 2px;
+}
+div.hypergrid-container > div:first-child {
+    bottom: 11px;
+    right: 11px;
+}</pre>
+
+  <h4>G. Move the scrollbars to the left and top</h4>
+  <pre>div.finbar-vertical {
+    left: 0;
+}
+div.finbar-horizontal {
+    top: 0;
+    margin-left: 14px;
+}</pre>
+
+  <h4>H. Move the scrollbars off the grid to the left and top</h4>
+  <pre>div.hypergrid-container > div:first-child {
+    top: 15px;
+    left: 15px;
+}
+div.finbar-vertical {
+    left: 0;
+}
+div.finbar-horizontal {
+    top: 0;
+    margin-left: 14px;
+}</pre>
+
+</div>
+
+
+</body>
+</html>

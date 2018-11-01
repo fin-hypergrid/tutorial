@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="index.css">
+  <script src="index.js"></script>
+</head>
+<body>
+<h2>Grid State</h2>
+
+The <span class="tab">State</span> tab provides an editor for the <code>grid.properties</code> object, that is, the grid’s “own” properties that override the theme properties, which in turn override the default properties. For example:
+<pre>{
+    color: 'red'
+}</pre>
+This sets the grid’s text color to red.
+
+<p>A grid state object may also include column properties in its <column>columns</column> property. These are not set on <code>grid.properties</code> but rather on the appropritate <code>column.properties</code> object
+  where <code>column</code> references a specific column object. For example:
+</p>
+<pre>{
+  columns
+}</pre>
+
+See the Workbench <span class="tab">Help</span> tab for tips on how to use the State tab editor.
+
+Let’s try setting some state data...
+
+
+<div class="sidebar">
+  Click the <span class="clickable page-next" onclick="window.top.tutorial.page(window.top.tutorial.num + 1, '')"></span> button above to go to the next page
+  to try editing the grid state object.
+</div>
+
+</body>
+</html>

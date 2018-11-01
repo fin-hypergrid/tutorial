@@ -1,46 +1,27 @@
 'use strict';
 
-var grid, tabBar, tutorial, callApi;
+var grid, tabBar, tutorial;
 
 window.onload = getSmart.bind(null, {
-    data: 'data/four-stocks.json',
+    data: 'data/nasdaq-100-20181015.json',
     state: 'data/state.json',
     scrollbars: 'data/scrollbars.css;txt', // ;txt forces get as text rather than style element
     localizer: 'data/localizers.js;snippets', // ;snippets forces get as text snippets array rather excuted code
     editor: 'data/cell-editors.js;snippets',
-    toc: 'data/table-of-contents.js',
-    'reset-svg': 'img/reset.svg',
-    'delete-svg': 'img/delete.svg'
-}, function(defaults) {
-    var NEW = '(New)';
-    var isCamelCase = /[a-z][A-Z]/;
-    var saveFuncs = {
+    toc: 'data/table-of-contents.js'
+}, function(files) {
+
+    const NEW = '(New)';
+    const saveFuncs = {
         editor: saveCellEditor,
         localizer: saveLocalizer
     };
+    const applyButtonSelector = 'input[type=button][value=Apply]';
 
     // Append version numbers to <h1> header
-    document.querySelector('body > h1:first-child').setAttribute('title', 'Hypergrid v' + fin.Hypergrid.prototype.version + ', Tutorial v17');
+    document.querySelector('body > h1:first-child > span').setAttribute('title', 'Hypergrid v' + fin.Hypergrid.prototype.version + ', Tutorial v18 (11/1/2018)');
 
-    function injectSVG(el, svg) {
-        var svgElement = /<svg[^]*<\/svg>/;
-        var match = svg.match(svgElement);
-        if (match) {
-            el.innerHTML = match[0];
-        } else {
-            console.warn('No <svg> markup found.');
-        }
-    }
-
-    // Create inline <svg> elements rather than using <img> tag.
-    // This allows us to set the <svg>'s fill and stroke colors with CSS.
-    Object.keys(defaults).filter(function(key) { return /-svg$/.test(key); }).forEach(function(key) {
-        var className = key.replace('svg', 'button');
-        var els = document.getElementsByClassName(className);
-        Array.prototype.forEach.call(els, function(el) {
-            injectSVG(el, defaults[key]);
-        });
-    });
+    fin.enhance(document);
 
     tabBar = new CurvyTabs(document.getElementById('editors'));
     tabBar.paint();
@@ -55,12 +36,13 @@ window.onload = getSmart.bind(null, {
         toc = [], // built by walk below
         pagerOptions = { path: 'pages/', toc: toc };
 
-    // load following *after* tutorialTabBar instantiation so <span class="tab"> can be enlivened
-    document.querySelector('div[name="Help"] > iframe').src = "pages/Help.html";
-    document.querySelector('div[name="Jump Start"] > iframe').src = "pages/Jump%20Start.html";
+    // load following *after* files loaded and tab bars instantiated so <span class="tab"> can be enlivened
+    tabBar.getTab('Help').querySelector('iframe').src = "Help.html";
+    tutorialTabBar.getTab('Help').querySelector('iframe').src = "pages/Help.html";
+    tutorialTabBar.getTab('Jump Start').querySelector('iframe').src = "pages/Jump%20Start.html";
 
-    // flatten the hierarchical defaults.toc into pagerOptions.toc
-    walk(defaults.toc);
+    // flatten the hierarchical files.toc into pagerOptions.toc
+    walk(files.toc);
     function walk(list) {
         list.forEach(function (item) {
             if (Array.isArray(item)) {
@@ -89,16 +71,27 @@ window.onload = getSmart.bind(null, {
     document.addEventListener('curvy-tabs-pager-paged', function(e) {
         var pageIndex = e.detail.pager.num - 1;
         var tocLineEls = tutorial.tabBar.container.querySelector('[name="ToC"] > iframe').contentDocument.querySelectorAll('li');
-        Array.prototype.forEach.call(tocLineEls, function(el, index) {
+        tocLineEls.forEach(function(el, index) {
             el.classList.toggle('current-page', index === pageIndex);
         });
     });
 
     callApi('data'); // inits both 'data' and 'state' editors
-    callApi('scrollbars');
+    callApi('scrollbars'); // injects stylesheet
 
-    initObjectEditor('localizer');
-    initObjectEditor('editor');
+    initObjectEditor('localizer'); // adds onclick handler
+    initObjectEditor('editor'); // adds onclick handler
+    applyButtonEl('Data').onclick = callApi.bind(null, 'data', 'Data set.');
+    applyButtonEl('State').onclick = callApi.bind(null, 'state', 'State set.');
+    applyButtonEl('Scrollbars').onclick = callApi.bind(null, 'scrollbars', 'Stylesheet injected.');
+
+    function applyButtonEl(tabName) {
+        return document.querySelector('div[name="' + tabName + '"] > ' + applyButtonSelector);
+    }
+
+    document.body.style.visibility = 'visible';
+
+    //// WIRE UP EVENT HANDLERS ////
 
     document.getElementById('reset-all').onclick = function() {
         if (confirm('Clear localStorage and reload?\n\nThis will reset all tabs to their default values, removing all edits, including new custom localizers and custom cell editors.')) {
@@ -170,23 +163,23 @@ window.onload = getSmart.bind(null, {
         tutorial.tabBar.container.style.height = height - 58 + 'px';
 
         var tutorialWindow = tutorial.tabBar.getTab('Tutorial').querySelector('iframe').contentWindow;
-        if (tutorialWindow.resize) {
+        if (typeof tutorialWindow.resize === 'function') {
             tutorialWindow.resize();
         }
     });
 
-    function callApi(type, confirmation) {
+    function callApi(type, confirmation, e) {
         var textEl = document.getElementById(type); // tab editor's textarea element
         var resetEl = document.getElementById('reset-' + type);
 
         textEl.oninput = function() {
-            resetEl.classList.toggle('disabled', textEl.value === stringifyAndUnquoteKeys(defaults[type]));
+            resetEl.classList.toggle('disabled', textEl.value === stringifyAndUnquoteKeys(files[type]));
         };
 
         if (textEl.value) {
             localStorage.setItem(type, textEl.value);
         } else if (!(textEl.value = localStorage.getItem(type))) {
-            textEl.value = stringifyAndUnquoteKeys(defaults[type]);
+            textEl.value = stringifyAndUnquoteKeys(files[type]);
             localStorage.setItem(type, textEl.value);
         }
 
@@ -275,13 +268,13 @@ window.onload = getSmart.bind(null, {
             resetEl = document.getElementById('reset-' + type),
             deleteEl = document.getElementById('delete-' + type),
             scriptEl = document.getElementById(type + '-script'),
-            addButtonEl = dropdownEl.parentElement.querySelector('.api'),
+            addButtonEl = dropdownEl.parentElement.querySelector(applyButtonSelector),
             prefix = type + '_',
             save = saveFuncs[type],
             newScript;
 
         // STEP 1: Save default scripts to local storage not previously saved
-        defaults[type].map(extractName).sort().forEach(function(name) {
+        files[type].map(extractName).sort().forEach(function(name) {
             var script = getDefaultScript(type, name);
             if (name === NEW) {
                 dropdownEl.add(new Option(name));
@@ -355,7 +348,7 @@ window.onload = getSmart.bind(null, {
     }
 
     function getDefaultScript(type, name) {
-        return defaults[type].find(isScriptByName.bind(null, name));
+        return files[type].find(isScriptByName.bind(null, name));
     }
 
     function isScriptByName(name, script) {
@@ -454,7 +447,7 @@ window.onload = getSmart.bind(null, {
             return;
         }
 
-        var optionEls = Array.prototype.slice.call(el.options);
+        var optionEls = el.options;
 
         var index = optionEls.findIndex(function(optionEl) {
             return optionEl.textContent === text;
@@ -502,6 +495,4 @@ window.onload = getSmart.bind(null, {
         var baseEl = document.getElementById(prefix + 'base');
         baseEl.parentElement.insertBefore(el, baseEl.nextElementSibling);
     }
-
-    window.callApi = callApi; // for access from index.html `onclick` handlers
 });

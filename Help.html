@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="pages/index.css">
+  <style>
+    h4 + div > *:not(:first-child) {
+      display: none;
+    }
+  </style>
+  <script>
+    window.onload = function() {
+        window.top.fin.polyfills(window);
+        window.top.fin.enhance(document);
+
+        document.querySelectorAll('h4 + div').forEach(function(el) {
+            var more = document.createElement('a');
+            more.href = 'javascript:void(0)';
+            more.innerText = 'more…';
+            more.onclick = vis.bind(null, more, true);
+            el.firstElementChild.appendChild(more);
+
+            var less = document.createElement('a');
+            less.href = 'javascript:void(0)';
+            less.innerText = '…less';
+            less.onclick =  vis.bind(null, more, false);
+            el.appendChild(less);
+        });
+
+        function vis(more, vis, e) {
+            more.style.display = vis ? 'none' : 'inline';
+            for (var el = e.target; !el.previousElementSibling || el.previousElementSibling.tagName !== 'H4'; el = el.parentElement) ;
+            el.children.forEach(function(el, i) {
+                if (i) { el.style.display = vis ? 'block' : 'none'; }
+            });
+        }
+    };
+  </script>
+</head>
+<body>
+
+<h2>Workbench Help</h2>
+<p>
+  Each of the above Workbench tabs (except this one) is a code editor.
+  Apply your edits to the Hypergrid instance above by clicking the <input type="button" value="Apply" title="Dummy apply button for illustrative purposes. Functional Apply buttons are found on each tab."> button found in the upper right of each tab above.
+  (The button’s tooltip reveals the actual API that is called.)
+</p>
+
+<div class="note">
+  To make Workbench editing easier, editors are parsed as straight JavaScript (with <code>eval</code>),
+  rather than as strict JSON (with <code>JSON.parse</code>), so strict adherence to the JSON standard (double quotes, primitive types, no comments, _etc._) is not necessary.
+</div>
+
+<h4 class="tab">Data</h4>
+<div>
+  <p>
+    A JavaScript representation of the grid’s data source.
+    Here you can edit the grid data to suit the needs of your cell formatter and editor development.
+  </p>
+
+  <ul class="dense">
+    <li>The data is structured as an array of <code>dataRow</code> objects.</li>
+    <li>The live Hypergrid instance above the Workbench is initialized with the contents of this tab.</li>
+    <li>After editing the data in this tab, rebind it to the grid by clicking <input type="button" value="Apply" title="Dummy apply button for illustrative purposes. Functional Apply buttons are found on each tab.">.</li>
+    <li>The grid is bound back to the Data tab so any edits made in the grid itself are automatically reflected in the Data tab.</li>
+  </ul>
+</div>
+
+<h4 class="tab">State</h4>
+<div>
+  <p>
+    A JavaScript representation of a grid <em>state</em> object, containing grid property settings affecting its look, feel, and behavior.
+    Here you can edit a state object and <em>load</em> it into the grid (that is, into <code>grid.properties</code>).
+  </p>
+
+  <ul class="dense">
+    <li>The state is stored as a plain object</li>
+    <li>This object is used to set grid properties <em>declaratively</em></li>
+    <li>Hypergrid has API calls for loading and saving state</li>
+    <li>Grid properties generally are “own” members of <code>grid.properties</code>, not including the object’s prototype chain (defaults, theming, <i>etc.</i>)</li>
+  </ul>
+</div>
+
+<h4 class="tab">Format</h4>
+<div>
+  <p>
+    Hypergrid cell formatters (called <em>localizers</em>) are functions that control how strings are formatted for display.
+    Here you can select an existing formatter for editing, or create and save<a class="superscript" href="#note">*</a> a new formatter.
+  </p>
+  <ul class="dense">
+    <li>Localizers are plain object APIs (see <a class="page">Formatters</a> page in tutorial)</li>
+    <li>The object is assigned to <code>module.exports</code></li>
+    <li>To edit an existing formatter:
+      <ul>
+        <li>Select it from the dropdown</li>
+        <li>Make your edits</li>
+        <li>Click <em>Apply</em></li>
+      </ul>
+    <li>To create a new formatter:
+      <ul>
+        <li>Select <em>(New)</em> from the dropdown</li>
+        <li>Update the <code>name</code> property of the new object</li>
+        <li>Implement <code>format</code> method</li>
+        <li>Click <em>Apply</em></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<h4 class="tab">Edit</h4>
+<div>
+  <p>
+    Hypergrid <em>cell editors</em> are functions that control the user interface that pops up over a grid cell during cell edit.
+    Here you can select an existing cell editor for editing, or create and save<a class="superscript" href="#note">*</a> a new cell editor.
+  </p>
+
+  <ul class="dense">
+    <li>Cell editors are subclasses of <code>CellEditor</code> (see <a class="page">Cell Editors</a> page in tutorial)</li>
+    <li>The class is assigned to <code>module.exports</code></li>
+    <li>To edit an existing cell editor class:
+      <ul>
+        <li>Select it from the dropdown</li>
+        <li>Make your edits</li>
+        <li>Click <em>Apply</em></li>
+      </ul>
+    <li>To create a new cell editor class:
+      <ul>
+        <li>Select <em>(New)</em> from the dropdown</li>
+        <li>Extend from the cell editor base class (or subclass thereof)</li>
+        <li>Specifiy the new name to `.extend()` (or in a <code>name</code> property in the prototype)</li>
+        <li>Override properties and methods of the base class</li>
+        <li>Click <em>Apply</em></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<h4 class="tab">Scrollbars</h4>
+<div>
+  <p>
+    Hypergrid uses custom scrollbars constructed from HTML elements with specific CSS classes.
+    Here you can play with restyling the scrollbars.
+  </p>
+
+  <p>
+    The default scrollbar stylesheet,
+    <a target="github" href="https://github.com/fin-hypergrid/finbars/blob/master/src/finbars.css">finbars.css</a>,
+    contains the base scrollbar CSS rules and is injected by the scrollbars module.
+  </p>
+
+  <ul>
+    <li>Create new CSS rules to override selected styles of the scrollbar classes</li>
+    <li>Click the Apply button to inject your own scrollbar stylesheet after the default one</li>
+    <li>Alternatively, click the "Override finbars.css" checkbox to override the default scrollbar stylesheet entirely (your rules must describe the scrollbars <em>completely</em>)</li>
+  </ul>
+</div>
+
+<table id="note" class="footnote">
+  <caption><div></div></caption> <!--separator line-->
+  <tr>
+    <td>*</td>
+    <td>
+      For your convenience, the workbench tabs are persisted between sessions in <a target="mdn" href="https://developer.mozilla.org/docs/Web/API/Storage/LocalStorage">LocalStorage</a>.
+      To save your work per&shy;ma&shy;nent&shy;ly, cut &amp; paste to a file.
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
